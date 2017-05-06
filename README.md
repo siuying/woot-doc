@@ -2,15 +2,76 @@
 
 Based on paper [Real time group editors without Operational transformation](https://hal.inria.fr/inria-00071240/document).
 
-## Site(id)
+## Doc(siteId)
 
-## Character(id, visible, value, prevId, nextId)
+### Doc#generateIns(pos, value)
+
+Generate an insert operation.
+
+### Doc#generateDel(pos)
+
+Generate a delete operation.
+
+### Doc#generateAttrib(pos, attributes)
+
+Generate an set attributes operation.
+
+### Doc#receive(op)
+
+Receive an operation. If the op is executable, execute it. Otherwise, push it into pool.
+
+--
+
+## Operations
+
+### Insert
+
+Insert a character to document.
+
+- insert: the character to be inserted
+
+```
+{
+  insert: char
+}
+```
+
+### Delete
+
+Delete a character from document.
+
+- delete: the character to be deleted
+
+```
+{
+  delete: char
+}
+```
+
+### Set Attribute
+
+Update attribute of a character.
+
+- attrib: the character to be updated
+- value: the attributes
+
+```
+{
+  attrib: char
+  value: value
+}
+```
+
+--
+
+## Character(id, value, visible, attributes, prevId, nextId)
 
 Represents W-character.
 
-- id - identitifer of character
-- visible - visibility of character
+- id - identitifer of character, a tuple of [siteId, localClock]
 - value - value of character
+- visible - Bool, visibility of character
+- attributes - Map, rich text attribute of the character
 - prevId - previous W-character id
 - nextId - next W-character id
 
@@ -43,54 +104,3 @@ Returns the position of the element c in sequence as a natural number.
 ### Seq#insert(c, position)
 
 Inserts the element c in sequence at position p.
-
-### Seq#subsequence(c, d)
-
-Returns the part of the sequence between the elements c and d, both not included.
-
-### Seq#contains(c)
-
-Returns true if c can be found in S.
-
-### Seq#value()
-
-Return the visible representation of sequence.
-
-### Seq#ithValue(index)
-
-Return the ith visible character of sequence.
-
-## Doc(siteId)
-
-### Doc#generateIns(pos, value)
-
-Generate an insert operation.
-
-### Doc#generateDel(pos)
-
-Generate a delete operation.
-
-### Doc#generateAttrib(pos, attributes)
-
-Generate an set attributes operation.
-
-### Doc#isExecutable(op)
-
-Check preconditions of an operation.
-
-### Doc#reception(op)
-
-Add operation to pool.
-
-### Doc#integrateDel(c)
-
-To integrate an operation del(c), we only need to set the visible flag of the character c to false.
-
-### Doc#integrateIns(c, previous, next)
-
-To integrate an operaion ins(c) in string, we need to replace c among all the charactes between Cp and Cn.
-These charactes can be previously deleted or inserted by concurrent operations.
-
-### Doc#integrateAttrib(c, attrib)
-
-To integrate an operaion attrib(c, a) in string.

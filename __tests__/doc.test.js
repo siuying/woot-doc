@@ -96,10 +96,70 @@ test.cb('Doc#generateAttrib should fire attrib event', t => {
   doc.generateIns(2, 'c')
   doc.on('attrib', (_, event) => {
     t.is(event.attrib.c, 'a')
-    t.deepEqual(event.attrib.a, {bold: true})
-    t.deepEqual(event.prev, {})
+    t.deepEqual(event.value, {bold: true})
     t.end()
   })
 
   doc.generateAttrib(1, {bold: true})
+})
+
+test('Doc#execute execute remote operations', t => {
+  const doc = new Doc(1999)
+  doc.generateIns(0, 'a')
+  doc.generateIns(1, 'b')
+  doc.generateIns(2, 'c')
+
+  const chA = doc.sequence.visibleCharAt(1)
+  const chB = doc.sequence.visibleCharAt(2)
+
+  const chD = new Character([100, 1], 'd', true, {}, chA.id, chB.id)
+  const insertOp = {insert: chD}
+  doc.execute(insertOp)
+  t.is(doc.sequence.toString(), 'adbc')
+
+  const deleteOp = {delete: chA}
+  doc.execute(deleteOp)
+  t.is(doc.sequence.toString(), 'dbc')
+
+  const attribOp = {attrib: chB, value: {bold: true}}
+  doc.execute(attribOp)
+  t.is(doc.sequence.toString(), 'dbc')
+
+  t.deepEqual(doc.sequence.visibleCharAt(2).c, 'b')
+  t.deepEqual(doc.sequence.visibleCharAt(2).a, {bold: true})
+})
+
+test("Doc#receive will execute executable op", t => {
+  const doc = new Doc(1999)
+  doc.generateIns(0, 'a')
+  doc.generateIns(1, 'b')
+  doc.generateIns(2, 'c')
+  t.is(doc.sequence.toString(), 'abc')
+
+  const chA = doc.sequence.visibleCharAt(1)
+  const chB = doc.sequence.visibleCharAt(2)
+  const chD = new Character([100, 1], 'd', true, {}, chA.id, chB.id)
+  const insertOp = {insert: chD}
+  doc.receive(insertOp)
+  t.is(doc.sequence.toString(), 'adbc')
+})
+
+test("Doc#receive will push unexecutable op in pool and execute it later", t => {
+  const doc = new Doc(1999)
+  doc.generateIns(0, 'a')
+  doc.generateIns(1, 'b')
+  doc.generateIns(2, 'c')
+  t.is(doc.sequence.toString(), 'abc')
+
+  const chA = doc.sequence.visibleCharAt(1)
+  const chB = doc.sequence.visibleCharAt(2)
+
+  const chD = new Character([100, 1], 'd', true, {}, chA.id, chB.id)
+  const insertOp = {insert: chD}
+  const deleteOp = {delete: chD}
+  
+  // for some reason, delete is received out of order
+  doc.receive(deleteOp)
+  doc.receive(insertOp)
+  t.is(doc.sequence.toString(), 'abc')
 })

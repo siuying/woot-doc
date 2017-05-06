@@ -66,10 +66,10 @@ test('Seq#contains should returns true if an element is in the seq, and false if
   seq.insert(c2, 2)
   seq.insert(c3, 3)
 
-  t.is(seq.contains(c1), true)
-  t.is(seq.contains(c2), true)
-  t.is(seq.contains(c3), true)
-  t.is(seq.contains(c4), false)
+  t.is(seq.contains(c1.id), true)
+  t.is(seq.contains(c2.id), true)
+  t.is(seq.contains(c3.id), true)
+  t.is(seq.contains(c4.id), false)
 })
 
 test('Seq#value should return the string value', t => {

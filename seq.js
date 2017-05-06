@@ -65,10 +65,10 @@ Seq.prototype.subsequence = function (c, d) {
   return new Seq(sub)
 }
 
-// Returns true if c can be found in sequence
-Seq.prototype.contains = function (c) {
+// Returns true if character with id can be found in sequence
+Seq.prototype.contains = function (id) {
   for (let el of this.storage) {
-    if (el.id[0] == c.id[0] && el.id[1] == c.id[1]) {
+    if (el.id[0] == id[0] && el.id[1] == id[1]) {
       return true
     }
   }
@@ -85,6 +85,8 @@ Seq.prototype.value = function () {
   }
   return value
 }
+
+Seq.prototype.toString = Seq.prototype.value
 
 // Return the ith visible character of sequence.
 Seq.prototype.visibleCharAt = function (index) {

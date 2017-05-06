@@ -1,4 +1,3 @@
 'use strict'
 
-const invariant = require('invariant')
-const Doc = require('./doc')
+moudle.export = require('./doc')

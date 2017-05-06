@@ -13,7 +13,7 @@ function Doc (siteId, localClock = 0) {
   this.siteId = siteId
   this.localClock = localClock
   this.sequence = new Seq()
-  this.dirty = false
+  this.pool = []
 }
 util.inherits(Doc, EventEmitter)
 
@@ -27,11 +27,11 @@ Doc.prototype.generateIns = function (position, value, attributes = {}) {
   const id = [this.siteId, this.localClock]
   const visible = true
   const char = new Character(id, value, visible, attributes, prevId, nextId)
-  this.integrateIns(char, prevChar, nextChar)
+  this._integrateIns(char, prevChar, nextChar)
   this.emit('insert', this, {insert: char, sender: this.siteId})
 }
 
-Doc.prototype.integrateIns = function (char, prevChar, nextChar) {
+Doc.prototype._integrateIns = function (char, prevChar, nextChar) {
   const sub = this.sequence.subsequence(prevChar, nextChar)
   if (sub.length() == 0) {
     this.sequence.insert(char, this.sequence.position(nextChar))
@@ -54,9 +54,8 @@ Doc.prototype.integrateIns = function (char, prevChar, nextChar) {
     while (i < l.length - 1 && (l[i].id[0] < char.id[0] || (l[i].id[0] === char.id[0] && l[i].id[1] < char.id[1]))) {
       i = i + 1
     }
-    this.integrateIns(char, l[i-1], l[i])
+    this._integrateIns(char, l[i-1], l[i])
   }
-  this.dirty = true
 }
 
 Doc.prototype.generateDel = function (pos) {
@@ -64,35 +63,95 @@ Doc.prototype.generateDel = function (pos) {
   invariant((char && char !== Character.begin && char !== Character.end), 'cannot generateDel when no more content to delete.')
 
   char.v = false
-  this.dirty = true
   this.emit('delete', this, {delete: char, sender: this.siteId})
 }
 
-Doc.prototype.integrateDel = function (char) {
-  this.sequence[this.sequence.position(char)].v = false
-  this.dirty = true
+Doc.prototype._integrateDel = function (char) {
+  const position = this.sequence.position(char)
+  invariant(typeof position != 'undefined', 'position not found')
+
+  const localChar = this.sequence.storage[position]
+  invariant(localChar, `character at position(${position}) not found`)
+
+  localChar.v = false
 }
 
 Doc.prototype.generateAttrib = function (pos, attributes) {
   const char = this.sequence.visibleCharAt(pos)
   invariant(char, 'char not exists')
 
-  const prevAttributes = Object.assign({}, char.a) // clone attributes
   char.a = Object.assign(char.a, attributes)
-  this.dirty = true
-  this.emit('attrib', this, {attrib: char, prev: prevAttributes, sender: this.siteId})
+  this.emit('attrib', this, {attrib: char, value: attributes, sender: this.siteId})
 }
 
-Doc.prototype.integrateAttrib = function (char, attributes) {
-  invariant(char, 'char not exists')
-  char.a = Object.assign(char.a, attributes)
-  this.dirty = true
+Doc.prototype._integrateAttrib = function (char, attributes) {
+  const position = this.sequence.position(char)
+  invariant(typeof position != 'undefined', 'position not found')
+
+  const localChar = this.sequence.storage[position]
+  invariant(localChar, `character at position(${position}) not found`)
+
+  localChar.a = Object.assign(localChar.a, attributes)
 }
 
 // Check preconditions of an operation.
 // return true if precondition met and operation can be executed.
-Doc.prototype.isExecutable = function (op) {
+Doc.prototype._isExecutable = function (op) {
+  if (op.delete) {
+    return this.sequence.contains(op.delete.id)
+  } else if (op.attrib) {
+    return this.sequence.contains(op.attrib.id)
+  } else if (op.insert) {
+    return this.sequence.contains(op.insert.p) && this.sequence.contains(op.insert.n)
+  } else {
+    return true
+  }
+}
 
+Doc.prototype.receive = function (op) {
+  if (this._isExecutable(op)) {
+    this.execute(op)
+  } else {
+    this.pool.push(op)
+  }
+
+  // try to clear previous pool, if possible
+  let newPool = []
+  while (op = this.pool.shift()) {
+    if (!this.execute(op)) {
+      newPool.push(op)
+    }
+  }
+  this.pool = newPool
+}
+
+Doc.prototype.execute = function (op) {
+  if (!this._isExecutable(op)) {
+    return false
+  }
+
+  if (op.insert) {
+    const prevCharId = op.insert.p
+    const nextCharId = op.insert.n
+    const prevChar = this.sequence.index[Character.getIndexKeyById(prevCharId)]
+    const nextChar = this.sequence.index[Character.getIndexKeyById(nextCharId)]
+    invariant(prevChar, "prevChar not found")
+    invariant(nextChar, "nextChar not found")
+    this._integrateIns(op.insert, prevChar, nextChar)
+
+  } else if (op.delete) {
+    this._integrateDel(op.delete)
+
+  } else if (op.attrib) {
+    this._integrateAttrib(op.attrib, op.value)
+
+  } else  {
+    invariant(false, `unexpected op: ${op}`)
+  }
+}
+
+Doc.prototype.toString = function () {
+  return `<Doc#[${siteId}] sequence=${this.sequence.toString()}>`
 }
 
 module.exports = Doc
