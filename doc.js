@@ -41,8 +41,8 @@ Doc.prototype._integrateIns = function (char, prevChar, nextChar) {
     const prevCharPos = this.sequence.position(prevChar)
     const nextCharPos = this.sequence.position(nextChar)
     for (let subChar of sub.storage) {
-      const subCharPrevChar = this.sequence.index[Character.getIndexKeyById(subChar.p)]
-      const subCharNextChar = this.sequence.index[Character.getIndexKeyById(subChar.n)]
+      const subCharPrevChar = this.sequence.getCharacterById(subChar.p)
+      const subCharNextChar = this.sequence.getCharacterById(subChar.n)
       const subCharPrevCharPos = this.sequence.position(subCharPrevChar)
       const subCharNextCharPos = this.sequence.position(subCharNextChar)
       if (subCharPrevCharPos <= prevCharPos && nextCharPos <= subCharNextCharPos) {
@@ -133,8 +133,8 @@ Doc.prototype.execute = function (op) {
   if (op.insert) {
     const prevCharId = op.insert.p
     const nextCharId = op.insert.n
-    const prevChar = this.sequence.index[Character.getIndexKeyById(prevCharId)]
-    const nextChar = this.sequence.index[Character.getIndexKeyById(nextCharId)]
+    const prevChar = this.sequence.getCharacterById(prevCharId)
+    const nextChar = this.sequence.getCharacterById(nextCharId)
     invariant(prevChar, "prevChar not found")
     invariant(nextChar, "nextChar not found")
     this._integrateIns(op.insert, prevChar, nextChar)

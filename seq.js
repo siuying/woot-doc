@@ -4,13 +4,16 @@ const Character = require('./character')
 const debug = require('debug')('woot')
 const invariant = require('invariant')
 
-function Seq (data = [Character.begin, Character.end]) {
-  if (!(this instanceof Seq)) return new Seq(data)
+function Seq (data = [Character.begin, Character.end], index = null) {
+  if (!(this instanceof Seq)) return new Seq(data, index)
   this.storage = data
-
-  this.index = {}
-  for (let ch of data) {
-    this.index[Character.getIndexKeyById(ch.id)] = ch
+  
+  if (!this.index) {
+    this.index = {}
+    for (let i = 0; i < data.length; i++) {
+      const ch = data[i]
+      this.index[Character.getIndexKeyById(ch.id)] = i
+    }
   }
 }
 
@@ -45,9 +48,10 @@ Seq.prototype.position = function (c) {
 Seq.prototype.insert = function (c, position) {
   for (let i = this.storage.length-1; i >= position; i--) {
     this.storage[i+1] = this.storage[i]
+    this.index[Character.getIndexKeyById(this.storage[i].id)] = i+1
   }
   this.storage[position] = c
-  this.index[Character.getIndexKeyById(c.id)] = c
+  this.index[Character.getIndexKeyById(c.id)] = position
 }
 
 // Returns the part of the sequence between the elements c and d, both not included.
@@ -100,6 +104,12 @@ Seq.prototype.visibleCharAt = function (index) {
     }
   }
   return null
+}
+
+// Return the chatacter internally by id
+// use the index to quickly get the character
+Seq.prototype.getCharacterById = function (id) {
+  return this.storage[this.index[Character.getIndexKeyById(id)]]
 }
 
 module.exports = Seq
