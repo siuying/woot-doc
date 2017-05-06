@@ -1,5 +1,6 @@
 {
-  "name": "woot",
+  "name": "woot-doc",
+  "description": "A WOOT(“WithOut Operational Transformation”) data structure for p2p collaborative apps",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
