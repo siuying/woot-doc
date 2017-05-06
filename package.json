@@ -11,6 +11,7 @@
     "ava": "^0.19.1"
   },
   "scripts": {
-    "test": "DEBUG=woot ava"
+    "test": "DEBUG=woot ava",
+    "watch": "DEBUG=woot ava --watch"
   }
 }

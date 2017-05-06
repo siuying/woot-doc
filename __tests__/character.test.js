@@ -18,7 +18,7 @@ test('end', t => {
 })
 
 test('Constructor', t => {
-  const c = new Character([0, 12345], true, 'h', {}, Character.begin.id, Character.end.id)
+  const c = new Character([0, 12345], 'h', true, {}, Character.begin.id, Character.end.id)
   t.deepEqual(c.id, [0, 12345])
   t.is(c.c, 'h')
   t.is(c.v, true)

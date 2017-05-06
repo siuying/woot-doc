@@ -70,6 +70,10 @@ Generate an insert operation.
 
 Generate a delete operation.
 
+### Doc#generateAttrib(pos, attributes)
+
+Generate an set attributes operation.
+
 ### Doc#isExecutable(op)
 
 Check preconditions of an operation.
@@ -86,3 +90,7 @@ To integrate an operation del(c), we only need to set the visible flag of the ch
 
 To integrate an operaion ins(c) in string, we need to replace c among all the charactes between Cp and Cn.
 These charactes can be previously deleted or inserted by concurrent operations.
+
+### Doc#integrateAttrib(c, attrib)
+
+To integrate an operaion attrib(c, a) in string.
