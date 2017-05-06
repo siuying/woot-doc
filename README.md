@@ -85,38 +85,8 @@ Update attribute of a character.
 Represents W-character.
 
 - id - identitifer of character, a tuple of [siteId, localClock]
-- value - value of character
-- visible - Bool, visibility of character
-- attributes - Map, rich text attribute of the character
-- prevId - previous W-character id
-- nextId - next W-character id
-
-## Seq()
-
-Represents W-string.
-
-An ordered sequence of Character [Cb, C1, C2 ... Cn, Ce] where Cb and Ce are special Characters marking beginning and ending of the sequence.
-
-### Seq#insert(c)
-
-Inserts the Character c between its previous and next characters. The precondition is previous and next character exist.
-
-### Seq#delete(c)
-
-Deletes the Character c. The precondition of delete(c) is c exists.
-
-### Seq#length
-
-Return the length of the sequence.
-
-### Seq#at(position)
-
-Returns the element at the position p in sequence.
-
-### Seq#position(c)
-
-Returns the position of the element c in sequence as a natural number.
-
-### Seq#insert(c, position)
-
-Inserts the element c in sequence at position p.
+- c (value) - value of character
+- v (visible) - Bool, visibility of character
+- a (attributes) - Map, rich text attribute of the character
+- p (prevId) - previous W-character id
+- n (nextId) - next W-character id
