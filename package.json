@@ -1,0 +1,15 @@
+{
+  "name": "woot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "invariant": "^2.2.2"
+  },
+  "devDependencies": {
+    "ava": "^0.19.1"
+  },
+  "scripts": {
+    "test": "ava"
+  }
+}
