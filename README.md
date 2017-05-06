@@ -14,49 +14,49 @@ Represents W-character.
 - prevId - previous W-character id
 - nextId - next W-character id
 
-## Sequence()
+## Seq()
 
 Represents W-string.
 
 An ordered sequence of Character [Cb, C1, C2 ... Cn, Ce] where Cb and Ce are special Characters marking beginning and ending of the sequence.
 
-### Sequence#insert(c)
+### Seq#insert(c)
 
 Inserts the Character c between its previous and next characters. The precondition is previous and next character exist.
 
-### Sequence#delete(c)
+### Seq#delete(c)
 
 Deletes the Character c. The precondition of delete(c) is c exists.
 
-### Sequence#length
+### Seq#length
 
 Return the length of the sequence.
 
-### Sequence#at(position)
+### Seq#at(position)
 
 Returns the element at the position p in sequence.
 
-### Sequence#position(c)
+### Seq#position(c)
 
 Returns the position of the element c in sequence as a natural number.
 
-### Sequence#insert(c, position)
+### Seq#insert(c, position)
 
 Inserts the element c in sequence at position p.
 
-### Sequence#subsequence(c, d)
+### Seq#subsequence(c, d)
 
 Returns the part of the sequence between the elements c and d, both not included.
 
-### Sequence#contains(c)
+### Seq#contains(c)
 
 Returns true if c can be found in S.
 
-### Sequence#value()
+### Seq#value()
 
 Return the visible representation of sequence.
 
-### Sequence#ithValue(index)
+### Seq#ithValue(index)
 
 Return the ith visible character of sequence.
 

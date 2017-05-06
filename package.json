@@ -4,12 +4,13 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "debug": "^2.6.6",
     "invariant": "^2.2.2"
   },
   "devDependencies": {
     "ava": "^0.19.1"
   },
   "scripts": {
-    "test": "ava"
+    "test": "DEBUG=woot ava"
   }
 }
