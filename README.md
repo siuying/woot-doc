@@ -32,7 +32,13 @@ Emitted when a delete is generated locally.
 
 Emitted when an attrib is generated locally.
 
---
+### Doc#snapshot()
+
+Get an structure that can be persisted the current state of document as JSON.
+
+### Doc.fromSnapshot(snapshot)
+
+Get a Document from snapshot.
 
 ## Operations
 
@@ -73,8 +79,6 @@ Update attribute of a character.
   value: value
 }
 ```
-
---
 
 ## Character(id, value, visible, attributes, prevId, nextId)
 
