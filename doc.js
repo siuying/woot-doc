@@ -7,13 +7,13 @@ const Seq = require('./seq')
 const {EventEmitter} = require('events')
 const debug = require('debug')('woot')
 
-function Doc (siteId, localClock = 0) {
+function Doc (siteId, localClock = 0, sequence = new Seq(), pool = []) {
   if (!(this instanceof Doc)) return new Doc(siteId, localClock)
 
   this.siteId = siteId
   this.localClock = localClock
-  this.sequence = new Seq()
-  this.pool = []
+  this.sequence = sequence
+  this.pool = pool
 }
 util.inherits(Doc, EventEmitter)
 
@@ -151,7 +151,17 @@ Doc.prototype.execute = function (op) {
 }
 
 Doc.prototype.toString = function () {
-  return `<Doc#[${siteId}] sequence=${this.sequence.toString()}>`
+  return `<Doc#[${this.siteId}] sequence=${this.sequence.toString()}>`
+}
+
+// Convert Doc into a JSON representation
+Doc.prototype.snapshot = function () {
+  return [this.siteId, this.localClock, this.sequence.storage, this.sequence.index, this.pool]
+}
+
+// Convert a JSON representation to Doc
+Doc.fromSnapshot = function(data) {
+  return new Doc(data[0], data[1], new Seq(data[2], data[3]), data[4])
 }
 
 module.exports = Doc

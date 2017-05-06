@@ -163,3 +163,30 @@ test("Doc#receive will push unexecutable op in pool and execute it later", t => 
   doc.receive(insertOp)
   t.is(doc.sequence.toString(), 'abc')
 })
+
+test('Doc#snapshot should convert doc into representation', t => {
+  const doc = new Doc(1)
+  doc.generateIns(0, 'a')
+  const storage = [Character.begin, {id: [1,1], a: {}, c: 'a', v: true, p: Character.begin.id, n: Character.end.id}, Character.end]
+  const index = {
+    "s-Infinityc-Infinity": 0,
+    "s1c1": 1,
+    "sInfinitycInfinity": 2,
+  }
+  const snapshot = [1, 1, storage, index, []]
+  t.deepEqual(doc.snapshot(), snapshot)
+})
+
+
+test('Doc#fromSnapshot should return a Doc from snapshot', t => {
+  const storage = [Character.begin, {id: [1,1], a: {}, c: 'a', v: true, p: Character.begin.id, n: Character.end.id}, Character.end]
+  const index = {
+    "s-Infinityc-Infinity": 0,
+    "s1c1": 1,
+    "sInfinitycInfinity": 2,
+  }
+  const snapshot = [1, 1, storage, index, []]
+  const doc = Doc.fromSnapshot(snapshot)
+  t.deepEqual(doc.snapshot(), snapshot)
+  t.deepEqual(doc.sequence.toString(), 'a')
+})

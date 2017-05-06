@@ -29,7 +29,7 @@ test('Seq#insert should insert element at position', t => {
 
   // verify indexes
   t.deepEqual(Object.keys(seq.index).sort(), ["s-Infinityc-Infinity", "sInfinitycInfinity", "s0c1"].sort())
-  t.deepEqual(Object.values(seq.index).map((v) => v.c).sort(), ["", "", "h"].sort())
+  t.deepEqual(Object.values(seq.index).sort(), [0, 1, 2].sort())
 
   seq.insert(c2, 2)
   seq.insert(c3, 3)

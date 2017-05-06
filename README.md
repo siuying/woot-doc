@@ -20,6 +20,18 @@ Generate an set attributes operation.
 
 Receive an operation. If the op is executable, execute it. Otherwise, push it into pool.
 
+### Doc#on('insert', op)
+
+Emitted when an insert is generated locally.
+
+### Doc#on('delete', op)
+
+Emitted when a delete is generated locally.
+
+### Doc#on('attrib', op)
+
+Emitted when an attrib is generated locally.
+
 --
 
 ## Operations
