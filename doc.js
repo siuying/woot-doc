@@ -1,6 +1,6 @@
 'use strict'
 
-const util = require('util')
+const inherits = require('inherits')
 const invariant = require('invariant')
 const Character = require('./character')
 const Seq = require('./seq')
@@ -15,7 +15,7 @@ function Doc (siteId, localClock = 0, sequence = new Seq(), pool = []) {
   this.sequence = sequence
   this.pool = pool
 }
-util.inherits(Doc, EventEmitter)
+inherits(Doc, EventEmitter)
 
 // Generate insert operation to the document
 Doc.prototype.generateIns = function (position, value, attributes = {}) {
