@@ -113,7 +113,7 @@ Seq.prototype.getCharacterById = function (id) {
 }
 
 function isString(obj) {
-  return Object.prototype.toString.call(obj) === "[object String]"
+  return typeof obj === 'string'
 }
 
 module.exports = Seq
