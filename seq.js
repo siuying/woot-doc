@@ -50,7 +50,13 @@ Seq.prototype.insert = function (c, position) {
     this.storage[i+1] = this.storage[i]
     this.index[Character.getIndexKeyById(this.storage[i].id)] = i+1
   }
+  if (position > 0) {
+    this.storage[position-1].n = c.id
+  }
   this.storage[position] = c
+  if (position < this.storage.length + 1) {
+    this.storage[position+1].p = c.id
+  }
   this.index[Character.getIndexKeyById(c.id)] = position
 }
 

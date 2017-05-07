@@ -25,8 +25,6 @@ Doc.prototype.generateIns = function (position, value, attributes = {}) {
   const nextChar = this.sequence.visibleCharAt(position + 1)
   const nextId = nextChar.id
   const id = [this.siteId, this.localClock]
-  prevChar.n = id
-  nextChar.p = id
   const visible = true
   const char = new Character(id, value, visible, attributes, prevId, nextId)
   this._integrateIns(char, prevChar, nextChar)
