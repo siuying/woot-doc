@@ -48,7 +48,7 @@ Doc.prototype._integrateIns = function (char, prevChar, nextChar) {
       const subCharPrevCharPos = this.sequence.position(subCharPrevChar)
       const subCharNextCharPos = this.sequence.position(subCharNextChar)
       if (subCharPrevCharPos <= prevCharPos && nextCharPos <= subCharNextCharPos) {
-        l.append(subChar)
+        l.push(subChar)
       }
     }
     l.push(nextChar)
