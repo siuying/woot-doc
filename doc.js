@@ -33,7 +33,7 @@ Doc.prototype.generateIns = function (position, value, attributes = {}) {
 
 Doc.prototype._integrateIns = function (char, prevChar, nextChar) {
   const sub = this.sequence.subsequence(prevChar, nextChar)
-  if (sub.length() == 0) {
+  if (sub.length() === 0) {
     this.sequence.insert(char, this.sequence.position(nextChar))
   } else {
     const l = []

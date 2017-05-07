@@ -23,8 +23,6 @@ test('Doc#generateIns should insert character to doc', t => {
   t.is(cha.c, 'a')
   t.is(chb.c, 'b')
   t.is(chc.c, 'c')
-  t.is(cha.p, chb.id) // should have proper prev id
-  t.is(cha.n, chc.id) // should have proper next id
   t.is(doc.sequence.length(), 5)
 })
 
@@ -86,6 +84,32 @@ test.cb('Doc#generateDel should fire event', t => {
   t.is(doc.sequence.value(), 'cba')
 
   doc.generateDel(1)
+})
+
+
+test('Doc#generateIns after Doc#generateDel all', t => {
+  const doc = new Doc(1999)
+  doc.generateIns(0, 'h')
+  doc.generateIns(1, 'e')
+  t.is(doc.sequence.value(), 'he')
+  t.is(doc.sequence.at(1).c, 'h')
+  t.is(doc.sequence.at(2).c, 'e')
+  t.is(doc.sequence.length(), 4)
+
+  doc.generateDel(2)
+  doc.generateDel(1)
+  t.is(doc.sequence.value(), '')
+  t.is(doc.sequence.at(1).c, 'h')
+  t.is(doc.sequence.at(2).c, 'e')
+  t.is(doc.sequence.at(0).c, '')
+  t.is(doc.sequence.at(1).v, false)
+  t.is(doc.sequence.at(2).v, false)
+  t.is(doc.sequence.at(3).c, '')
+  t.is(doc.sequence.length(), 4)
+
+  doc.generateIns(0, 'h')
+  t.is(doc.sequence.value(), 'h')
+  t.is(doc.sequence.length(), 5)
 })
 
 test('Doc#generateAttrib should add attribute', t => {
