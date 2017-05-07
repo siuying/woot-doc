@@ -83,7 +83,7 @@ Seq.prototype.contains = function (id) {
 Seq.prototype.value = function () {
   let value = ""
   for (let el of this.storage) {
-    if (el.v) {
+    if (el.v && isString(el.c)) {
       value += el.c
     }
   }
@@ -110,6 +110,10 @@ Seq.prototype.visibleCharAt = function (index) {
 // use the index to quickly get the character
 Seq.prototype.getCharacterById = function (id) {
   return this.storage[this.index[Character.getIndexKeyById(id)]]
+}
+
+function isString(obj) {
+  return Object.prototype.toString.call(obj) === "[object String]"
 }
 
 module.exports = Seq

@@ -26,6 +26,15 @@ test('Doc#generateIns should insert character to doc', t => {
   t.is(doc.sequence.length(), 5)
 })
 
+test('Doc#generateIns should insert embed image to doc', t => {
+  const doc = new Doc(1999)
+  doc.generateIns(0, {image: 'https://octodex.github.com/images/labtocat.png'})
+  t.is(doc.sequence.value(), '')
+
+  const chb = doc.sequence.visibleCharAt(1)
+  t.deepEqual(chb.c, {image: 'https://octodex.github.com/images/labtocat.png'})
+})
+
 test.cb('Doc#generateIns should fire insert event', t => {
   const doc = new Doc(1999)
   let c1, c2 = null
@@ -222,5 +231,5 @@ test('Doc#fromSnapshot should return a Doc from snapshot', t => {
   const snapshot = [1, 1, storage, index, []]
   const doc = Doc.fromSnapshot(snapshot)
   t.deepEqual(doc.snapshot(), snapshot)
-  t.deepEqual(doc.sequence.toString(), 'a')
+  t.is(doc.sequence.toString(), 'a')
 })
