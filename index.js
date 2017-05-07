@@ -1,3 +1,3 @@
 'use strict'
 
-module.export = require('./doc')
+module.exports = require('./doc')
