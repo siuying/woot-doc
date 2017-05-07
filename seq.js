@@ -68,7 +68,7 @@ Seq.prototype.subsequence = function (c, d) {
   invariant(start < end, "position of c must be before d")
 
   if (start+1 <= end-1 && start > -1 && end > -1) {
-    for (let i = start+1; i <= end - 1; i++) {
+    for (let i = start+1; i < end; i++) {
       sub.push(this.storage[i])
     }
   }
