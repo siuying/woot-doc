@@ -3,7 +3,7 @@ const Character = require('../character')
 
 test('begin', t => {
   const begin = Character.begin
-  t.deepEqual(begin.id, [Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER])
+  t.deepEqual(begin.id, [-1, -1])
   t.is(begin.c, '')
   t.is(begin.v, true)
   t.deepEqual(begin.a, {})
@@ -11,7 +11,7 @@ test('begin', t => {
 
 test('end', t => {
   const end = Character.end
-  t.deepEqual(end.id, [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER])
+  t.deepEqual(end.id, [-2, -2])
   t.is(end.c, '')
   t.is(end.v, true)
   t.deepEqual(end.a, {})
@@ -23,6 +23,6 @@ test('Constructor', t => {
   t.is(c.c, 'h')
   t.is(c.v, true)
   t.deepEqual(c.a, {})
-  t.deepEqual(c.p, [Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER])
-  t.deepEqual(c.n, [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER])
+  t.deepEqual(c.p, [-1, -1])
+  t.deepEqual(c.n, [-2, -2])
 })

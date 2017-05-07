@@ -10,9 +10,9 @@ function Character (id, value, visible = true, attributes = {}, prevId = null, n
   return {id: id, v: !!visible, c: value, a: attributes, p: prevId, n: nextId}
 }
 
-Character.begin = new Character([Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER], '', true, {}, null, [Number.MAX_SAFE_INTEGER,Number.MAX_SAFE_INTEGER])
+Character.begin = new Character([-1, -1], '', true, {}, null, [-2,-2])
 
-Character.end = new Character([Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER], '', true, {}, [Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER], null)
+Character.end = new Character([-2, -2], '', true, {}, [-1, -1], null)
 
 Character.getIndexKeyById = function (id) {
   return `s${id[0]}c${id[1]}`
