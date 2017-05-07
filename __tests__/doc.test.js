@@ -169,9 +169,9 @@ test('Doc#snapshot should convert doc into representation', t => {
   doc.generateIns(0, 'a')
   const storage = [Character.begin, {id: [1,1], a: {}, c: 'a', v: true, p: Character.begin.id, n: Character.end.id}, Character.end]
   const index = {
-    "s-Infinityc-Infinity": 0,
+    "s-9007199254740991c-9007199254740991": 0,
     "s1c1": 1,
-    "sInfinitycInfinity": 2,
+    "s9007199254740991c9007199254740991": 2,
   }
   const snapshot = [1, 1, storage, index, []]
   t.deepEqual(doc.snapshot(), snapshot)
@@ -181,9 +181,9 @@ test('Doc#snapshot should convert doc into representation', t => {
 test('Doc#fromSnapshot should return a Doc from snapshot', t => {
   const storage = [Character.begin, {id: [1,1], a: {}, c: 'a', v: true, p: Character.begin.id, n: Character.end.id}, Character.end]
   const index = {
-    "s-Infinityc-Infinity": 0,
+    "s-9007199254740991c-9007199254740991": 0,
     "s1c1": 1,
-    "sInfinitycInfinity": 2,
+    "s9007199254740991c9007199254740991": 2,
   }
   const snapshot = [1, 1, storage, index, []]
   const doc = Doc.fromSnapshot(snapshot)
