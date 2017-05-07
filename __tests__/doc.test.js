@@ -8,6 +8,7 @@ const debug = require('debug')('woot')
 test('Doc() construct doc', t => {
   const doc = new Doc(1999)
   t.is(doc.sequence.value(), '')
+  t.is(doc.sequence.length(), 2) // contains two empty character mark begin and end
 })
 
 test('Doc#generateIns should insert character to doc', t => {
@@ -16,6 +17,15 @@ test('Doc#generateIns should insert character to doc', t => {
   doc.generateIns(0, 'b')
   doc.generateIns(2, 'c')
   t.is(doc.sequence.value(), 'bac')
+  const chb = doc.sequence.visibleCharAt(1)
+  const cha = doc.sequence.visibleCharAt(2)
+  const chc = doc.sequence.visibleCharAt(3)
+  t.is(cha.c, 'a')
+  t.is(chb.c, 'b')
+  t.is(chc.c, 'c')
+  t.is(cha.p, chb.id) // should have proper prev id
+  t.is(cha.n, chc.id) // should have proper next id
+  t.is(doc.sequence.length(), 5)
 })
 
 test.cb('Doc#generateIns should fire insert event', t => {
