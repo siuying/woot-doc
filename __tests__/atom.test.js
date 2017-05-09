@@ -1,8 +1,8 @@
 const test = require('ava')
-const Character = require('../character')
+const Atom = require('../atom')
 
 test('begin', t => {
-  const begin = Character.begin
+  const begin = Atom.begin
   t.deepEqual(begin.id, [-1, -1])
   t.is(begin.value, '')
   t.is(begin.visible, true)
@@ -10,7 +10,7 @@ test('begin', t => {
 })
 
 test('end', t => {
-  const end = Character.end
+  const end = Atom.end
   t.deepEqual(end.id, [-2, -2])
   t.is(end.value, '')
   t.is(end.visible, true)
@@ -18,7 +18,7 @@ test('end', t => {
 })
 
 test('Constructor', t => {
-  const c = new Character([0, 12345], 'h', true, {}, Character.begin.id, Character.end.id)
+  const c = new Atom([0, 12345], 'h', true, {}, Atom.begin.id, Atom.end.id)
   t.deepEqual(c.id, [0, 12345])
   t.is(c.value, 'h')
   t.is(c.visible, true)
@@ -28,16 +28,16 @@ test('Constructor', t => {
 })
 
 test('toJSON() should convert character to json', t => {
-  const c = new Character([0, 1], 'h', true, {}, Character.begin.id, Character.end.id)
-  t.deepEqual(c.toJSON(), [[0, 1], 'h', true, {}, Character.begin.id, Character.end.id])
+  const c = new Atom([0, 1], 'h', true, {}, Atom.begin.id, Atom.end.id)
+  t.deepEqual(c.toJSON(), [[0, 1], 'h', true, {}, Atom.begin.id, Atom.end.id])
 })
 
 test('fromJSON() should convert json to character', t => {
-  const c1 = Character.fromJSON([[0, 1], 'h', true, {}, Character.begin.id, Character.end.id])
-  t.deepEqual(c1.toJSON(), [[0, 1], 'h', true, {}, Character.begin.id, Character.end.id])
+  const c1 = Atom.fromJSON([[0, 1], 'h', true, {}, Atom.begin.id, Atom.end.id])
+  t.deepEqual(c1.toJSON(), [[0, 1], 'h', true, {}, Atom.begin.id, Atom.end.id])
 })
 
 test('getIndexKey should return key based on id', t => {
-  const c1 = Character.fromJSON([[0, 1], 'h', true, {}, Character.begin.id, Character.end.id])
+  const c1 = Atom.fromJSON([[0, 1], 'h', true, {}, Atom.begin.id, Atom.end.id])
   t.deepEqual(c1.getIndexKey(), `s0c1`)
 })

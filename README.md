@@ -79,14 +79,3 @@ Update attribute of a character.
   value: value
 }
 ```
-
-## Character(id, value, visible, attributes, prevId, nextId)
-
-Represents W-character.
-
-- id - identitifer of character, a tuple of [siteId, localClock]
-- c (value) - value of character
-- v (visible) - Bool, visibility of character
-- a (attributes) - Map, rich text attribute of the character
-- p (prevId) - previous W-character id
-- n (nextId) - next W-character id

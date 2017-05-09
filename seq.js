@@ -1,10 +1,10 @@
 'use strict'
 
-const Character = require('./character')
+const Atom = require('./atom')
 const debug = require('debug')('woot')
 const assert = require('assert')
 
-function Seq (data = [Character.begin, Character.end], index = null) {
+function Seq (data = [Atom.begin, Atom.end], index = null) {
   if (!(this instanceof Seq)) return new Seq(data, index)
   this.storage = data
   
@@ -12,7 +12,7 @@ function Seq (data = [Character.begin, Character.end], index = null) {
     this.index = {}
     for (let i = 0; i < data.length; i++) {
       const ch = data[i]
-      this.index[Character.getIndexKeyById(ch.id)] = i
+      this.index[Atom.getIndexKeyById(ch.id)] = i
     }
   }
 }
@@ -48,10 +48,10 @@ Seq.prototype.position = function (c) {
 Seq.prototype.insert = function (c, position) {
   for (let i = this.storage.length-1; i >= position; i--) {
     this.storage[i+1] = this.storage[i]
-    this.index[Character.getIndexKeyById(this.storage[i].id)] = i+1
+    this.index[Atom.getIndexKeyById(this.storage[i].id)] = i+1
   }
   this.storage[position] = c
-  this.index[Character.getIndexKeyById(c.id)] = position
+  this.index[Atom.getIndexKeyById(c.id)] = position
 }
 
 // Returns the part of the sequence between the elements c and d, both not included.
@@ -69,7 +69,7 @@ Seq.prototype.subsequence = function (c, d) {
   return new Seq(sub)
 }
 
-// Returns true if character with id can be found in sequence
+// Returns true if atom with id can be found in sequence
 Seq.prototype.contains = function (id) {
   for (let el of this.storage) {
     if (el.id[0] == id[0] && el.id[1] == id[1]) {
@@ -92,8 +92,8 @@ Seq.prototype.value = function () {
 
 Seq.prototype.toString = Seq.prototype.value
 
-// Return the ith visible character of sequence.
-Seq.prototype.visibleCharAt = function (index) {
+// Return the ith visible atom of sequence.
+Seq.prototype.visibleAtomAt = function (index) {
   let counter = 0
   for (let el of this.storage) {
     if (el.visible) {
@@ -113,13 +113,13 @@ Seq.prototype.toJSON = function () {
 
 Seq.fromJSON = function (data) {
   assert(Array.isArray(data) && data.length === 2, `Unexpected data, expected array of 2 elements: ${data}`)
-  return new Seq(data[0].map((d) => Character.fromJSON(d)), data[1])
+  return new Seq(data[0].map((d) => Atom.fromJSON(d)), data[1])
 }
 
 // Return the chatacter internally by id
 // use the index to quickly get the character
-Seq.prototype.getCharacterById = function (id) {
-  return this.storage[this.index[Character.getIndexKeyById(id)]]
+Seq.prototype.getAtomById = function (id) {
+  return this.storage[this.index[Atom.getIndexKeyById(id)]]
 }
 
 function isString(obj) {

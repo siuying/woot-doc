@@ -2,7 +2,7 @@
 
 const test = require('ava')
 const Doc = require('../doc')
-const Character = require('../character')
+const Atom = require('../atom')
 const debug = require('debug')('woot')
 
 test('Doc() construct doc', t => {
@@ -18,9 +18,9 @@ test('Doc#generateIns should insert and delete character to doc', t => {
   doc.generateIns(2, 'c')
   t.is(doc.sequence.value(), 'bac')
 
-  const chb = doc.sequence.visibleCharAt(1)
-  const cha = doc.sequence.visibleCharAt(2)
-  const chc = doc.sequence.visibleCharAt(3)
+  const chb = doc.sequence.visibleAtomAt(1)
+  const cha = doc.sequence.visibleAtomAt(2)
+  const chc = doc.sequence.visibleAtomAt(3)
   t.is(cha.value, 'a')
   t.is(chb.value, 'b')
   t.is(chc.value, 'c')
@@ -36,7 +36,7 @@ test('Doc#generateIns should insert embed image to doc', t => {
   doc.generateIns(0, {image: 'https://octodex.github.com/images/labtocat.png'})
   t.is(doc.sequence.value(), '')
 
-  const chb = doc.sequence.visibleCharAt(1)
+  const chb = doc.sequence.visibleAtomAt(1)
   t.deepEqual(chb.value, {image: 'https://octodex.github.com/images/labtocat.png'})
 })
 
@@ -45,16 +45,16 @@ test.cb('Doc#generateIns should fire insert event', t => {
   let c1, c2 = null
   doc.on('insert', (_, event) => {
     if (event.insert.value == 'a') {
-      t.is(event.insert.prevId, Character.begin.id)
-      t.is(event.insert.nextId, Character.end.id)
+      t.is(event.insert.prevId, Atom.begin.id)
+      t.is(event.insert.nextId, Atom.end.id)
       c1 = event.insert
     } else if (event.insert.value == 'b') {
-      t.is(event.insert.prevId, Character.begin.id)
+      t.is(event.insert.prevId, Atom.begin.id)
       t.is(event.insert.nextId, c1.id)
       c2 = event.insert
     } else if (event.insert.value == 'c') {
       t.is(event.insert.prevId, c1.id)
-      t.is(event.insert.nextId, Character.end.id)
+      t.is(event.insert.nextId, Atom.end.id)
       t.end()
     } else {
       t.fail()
@@ -86,7 +86,7 @@ test.cb('Doc#generateDel should fire event', t => {
   const doc = new Doc(2000)
   doc.on('delete', (_, event) => {
     t.is(event.delete.value, 'c')
-    t.is(event.delete.prevId, Character.begin.id)
+    t.is(event.delete.prevId, Atom.begin.id)
     t.is(event.delete.visible, false)
     t.is(doc.sequence.value(), 'ba')
     t.end()
@@ -133,7 +133,7 @@ test('Doc#generateAttrib should add attribute', t => {
   doc.generateIns(2, 'c')
 
   doc.generateAttrib(1, {bold: true})
-  const ch = doc.sequence.visibleCharAt(1)
+  const ch = doc.sequence.visibleAtomAt(1)
   t.deepEqual(ch.attributes, {bold: true})
 })
 
@@ -157,10 +157,10 @@ test('Doc#execute execute remote operations', t => {
   doc.generateIns(1, 'b')
   doc.generateIns(2, 'c')
 
-  const chA = doc.sequence.visibleCharAt(1)
-  const chB = doc.sequence.visibleCharAt(2)
+  const chA = doc.sequence.visibleAtomAt(1)
+  const chB = doc.sequence.visibleAtomAt(2)
 
-  const chD = new Character([100, 1], 'd', true, {}, chA.id, chB.id)
+  const chD = new Atom([100, 1], 'd', true, {}, chA.id, chB.id)
   const insertOp = {insert: chD}
   doc.execute(insertOp)
   t.is(doc.sequence.toString(), 'adbc')
@@ -173,8 +173,8 @@ test('Doc#execute execute remote operations', t => {
   doc.execute(attribOp)
   t.is(doc.sequence.toString(), 'dbc')
 
-  t.deepEqual(doc.sequence.visibleCharAt(2).value, 'b')
-  t.deepEqual(doc.sequence.visibleCharAt(2).attributes, {bold: true})
+  t.deepEqual(doc.sequence.visibleAtomAt(2).value, 'b')
+  t.deepEqual(doc.sequence.visibleAtomAt(2).attributes, {bold: true})
 })
 
 test("Doc#receive will execute executable op", t => {
@@ -184,9 +184,9 @@ test("Doc#receive will execute executable op", t => {
   doc.generateIns(2, 'c')
   t.is(doc.sequence.toString(), 'abc')
 
-  const chA = doc.sequence.visibleCharAt(1)
-  const chB = doc.sequence.visibleCharAt(2)
-  const chD = new Character([100, 1], 'd', true, {}, chA.id, chB.id)
+  const chA = doc.sequence.visibleAtomAt(1)
+  const chB = doc.sequence.visibleAtomAt(2)
+  const chD = new Atom([100, 1], 'd', true, {}, chA.id, chB.id)
   const insertOp = {insert: chD}
   doc.receive(insertOp)
   t.is(doc.sequence.toString(), 'adbc')
@@ -199,10 +199,10 @@ test("Doc#receive will push unexecutable op in pool and execute it later", t => 
   doc.generateIns(2, 'c')
   t.is(doc.sequence.toString(), 'abc')
 
-  const chA = doc.sequence.visibleCharAt(1)
-  const chB = doc.sequence.visibleCharAt(2)
+  const chA = doc.sequence.visibleAtomAt(1)
+  const chB = doc.sequence.visibleAtomAt(2)
 
-  const chD = new Character([100, 1], 'd', true, {}, chA.id, chB.id)
+  const chD = new Atom([100, 1], 'd', true, {}, chA.id, chB.id)
   const insertOp = {insert: chD}
   const deleteOp = {delete: chD}
   
@@ -215,7 +215,7 @@ test("Doc#receive will push unexecutable op in pool and execute it later", t => 
 test('Doc#toJSON should convert doc into JSON representation', t => {
   const doc = new Doc(1)
   doc.generateIns(0, 'a')
-  const storage = [Character.begin, new Character([1,1], 'a', true, {}, Character.begin.id, Character.end.id), Character.end]
+  const storage = [Atom.begin, new Atom([1,1], 'a', true, {}, Atom.begin.id, Atom.end.id), Atom.end]
     .map(c => c.toJSON())
   const index = {
     "s-1c-1": 0,
@@ -229,7 +229,7 @@ test('Doc#toJSON should convert doc into JSON representation', t => {
 
 
 test('Doc#fromJSON should return a Doc from JSON', t => {
-  const storage = [Character.begin, new Character([1,1], 'a', true, {}, Character.begin.id, Character.end.id), Character.end]
+  const storage = [Atom.begin, new Atom([1,1], 'a', true, {}, Atom.begin.id, Atom.end.id), Atom.end]
     .map(c => c.toJSON())
   const index = {
     "s-1c-1": 0,

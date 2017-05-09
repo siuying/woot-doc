@@ -2,7 +2,7 @@
 
 const inherits = require('inherits')
 const assert = require('assert')
-const Character = require('./character')
+const Atom = require('./atom')
 const Seq = require('./seq')
 const {EventEmitter} = require('events')
 const debug = require('debug')('woot')
@@ -20,13 +20,13 @@ inherits(Doc, EventEmitter)
 // Generate insert operation to the document
 Doc.prototype.generateIns = function (position, value, attributes = {}) {
   this.localClock = this.localClock + 1
-  const prevChar = this.sequence.visibleCharAt(position)
+  const prevChar = this.sequence.visibleAtomAt(position)
   const prevId = prevChar.id
-  const nextChar = this.sequence.visibleCharAt(position + 1)
+  const nextChar = this.sequence.visibleAtomAt(position + 1)
   const nextId = nextChar.id
   const id = [this.siteId, this.localClock]
   const visible = true
-  const char = new Character(id, value, visible, attributes, prevId, nextId)
+  const char = new Atom(id, value, visible, attributes, prevId, nextId)
   this._integrateIns(char, prevChar, nextChar)
   this.emit('insert', this, {insert: char, sender: this.siteId})
 }
@@ -41,8 +41,8 @@ Doc.prototype._integrateIns = function (char, prevChar, nextChar) {
     const prevCharPos = this.sequence.position(prevChar)
     const nextCharPos = this.sequence.position(nextChar)
     for (let subChar of sub.storage) {
-      const subCharPrevChar = this.sequence.getCharacterById(subChar.prevId)
-      const subCharNextChar = this.sequence.getCharacterById(subChar.nextId)
+      const subCharPrevChar = this.sequence.getAtomById(subChar.prevId)
+      const subCharNextChar = this.sequence.getAtomById(subChar.nextId)
       const subCharPrevCharPos = this.sequence.position(subCharPrevChar)
       const subCharNextCharPos = this.sequence.position(subCharNextChar)
       if (subCharPrevCharPos <= prevCharPos && nextCharPos <= subCharNextCharPos) {
@@ -60,8 +60,8 @@ Doc.prototype._integrateIns = function (char, prevChar, nextChar) {
 }
 
 Doc.prototype.generateDel = function (pos) {
-  const char = this.sequence.visibleCharAt(pos)
-  assert((char && char !== Character.begin && char !== Character.end), 'cannot generateDel when no more content to delete.')
+  const char = this.sequence.visibleAtomAt(pos)
+  assert((char && char !== Atom.begin && char !== Atom.end), 'cannot generateDel when no more content to delete.')
 
   char.visible = false
   this.emit('delete', this, {delete: char, sender: this.siteId})
@@ -72,13 +72,13 @@ Doc.prototype._integrateDel = function (char) {
   assert(typeof position != 'undefined', 'position not found')
 
   const localChar = this.sequence.storage[position]
-  assert(localChar, `character at position(${position}) not found`)
+  assert(localChar, `Atom at position(${position}) not found`)
 
   localChar.visible = false
 }
 
 Doc.prototype.generateAttrib = function (pos, attributes) {
-  const char = this.sequence.visibleCharAt(pos)
+  const char = this.sequence.visibleAtomAt(pos)
   assert(char, 'char not exists')
 
   char.attributes = Object.assign(char.attributes, attributes)
@@ -90,7 +90,7 @@ Doc.prototype._integrateAttrib = function (char, attributes) {
   assert(typeof position != 'undefined', 'position not found')
 
   const localChar = this.sequence.storage[position]
-  assert(localChar, `character at position(${position}) not found`)
+  assert(localChar, `Atom at position(${position}) not found`)
 
   localChar.attributes = Object.assign(localChar.attributes, attributes)
 }
@@ -134,8 +134,10 @@ Doc.prototype.execute = function (op) {
   if (op.insert) {
     const prevCharId = op.insert.prevId
     const nextCharId = op.insert.nextId
-    const prevChar = this.sequence.getCharacterById(prevCharId)
-    const nextChar = this.sequence.getCharacterById(nextCharId)
+    assert(prevCharId, "prevCharId not found")
+    assert(nextCharId, "nextCharId not found")
+    const prevChar = this.sequence.getAtomById(prevCharId)
+    const nextChar = this.sequence.getAtomById(nextCharId)
     assert(prevChar, "prevChar not found")
     assert(nextChar, "nextChar not found")
     this._integrateIns(op.insert, prevChar, nextChar)
