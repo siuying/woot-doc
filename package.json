@@ -10,6 +10,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "assert": "^1.4.1",
     "debug": "^2.6.6",
     "inherits": "^2.0.3",
     "invariant": "^2.2.2"

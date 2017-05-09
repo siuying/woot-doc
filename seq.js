@@ -2,7 +2,7 @@
 
 const Character = require('./character')
 const debug = require('debug')('woot')
-const invariant = require('invariant')
+const assert = require('assert')
 
 function Seq (data = [Character.begin, Character.end], index = null) {
   if (!(this instanceof Seq)) return new Seq(data, index)
@@ -59,7 +59,7 @@ Seq.prototype.subsequence = function (c, d) {
   const sub = []
   const start = this.position(c)
   const end = this.position(d)
-  invariant(start < end, "position of c must be before d")
+  assert(start < end, "position of c must be before d")
 
   if (start+1 <= end-1 && start > -1 && end > -1) {
     for (let i = start+1; i < end; i++) {
@@ -83,8 +83,8 @@ Seq.prototype.contains = function (id) {
 Seq.prototype.value = function () {
   let value = ""
   for (let el of this.storage) {
-    if (el.v && isString(el.c)) {
-      value += el.c
+    if (el.visible && isString(el.value)) {
+      value += el.value
     }
   }
   return value
@@ -96,7 +96,7 @@ Seq.prototype.toString = Seq.prototype.value
 Seq.prototype.visibleCharAt = function (index) {
   let counter = 0
   for (let el of this.storage) {
-    if (el.v) {
+    if (el.visible) {
       if (counter === index) {
         return el
       }
@@ -104,6 +104,16 @@ Seq.prototype.visibleCharAt = function (index) {
     }
   }
   return null
+}
+
+Seq.prototype.toJSON = function () {
+  assert(Array.isArray(this.storage), 'storage should be array')
+  return [this.storage.map((c) => c.toJSON()), this.index]
+}
+
+Seq.fromJSON = function (data) {
+  assert(Array.isArray(data) && data.length === 2, `Unexpected data, expected array of 2 elements: ${data}`)
+  return new Seq(data[0].map((d) => Character.fromJSON(d)), data[1])
 }
 
 // Return the chatacter internally by id

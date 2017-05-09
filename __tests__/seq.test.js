@@ -24,7 +24,7 @@ test('Seq#insert should insert element at position', t => {
   // verify content
   t.is(seq.length(), 3)
   t.deepEqual(seq.at(0), Character.begin)
-  t.is(seq.at(1).c, 'h')
+  t.is(seq.at(1).value, 'h')
   t.deepEqual(seq.at(2), Character.end)
 
   // verify indexes
@@ -35,9 +35,9 @@ test('Seq#insert should insert element at position', t => {
   seq.insert(c3, 3)
   t.is(seq.length(), 5)
   t.deepEqual(seq.at(0), Character.begin)
-  t.is(seq.at(1).c, 'h')
-  t.is(seq.at(2).c, 'e')
-  t.is(seq.at(3).c, 'l')
+  t.is(seq.at(1).value, 'h')
+  t.is(seq.at(2).value, 'e')
+  t.is(seq.at(3).value, 'l')
   t.deepEqual(seq.at(4), Character.end)
 })
 
@@ -52,8 +52,8 @@ test('Seq#subsequence should returns a subsequence', t => {
 
   const sub = seq.subsequence(c1, Character.end)
   t.is(sub.length(), 2)
-  t.is(sub.at(0).c, 'e')
-  t.is(sub.at(1).c, 'l')
+  t.is(sub.at(0).value, 'e')
+  t.is(sub.at(1).value, 'l')
 })
 
 test('Seq#contains should returns true if an element is in the seq, and false if not', t => {
