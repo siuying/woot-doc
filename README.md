@@ -20,9 +20,11 @@ Generate an set attributes operation.
 
 Receive an operation. If the op is executable, execute it. Otherwise, push it into pool.
 
-### Doc#visibleAtomAt(pos)
+### Doc#visiblePosition(c)
 
-Return visible atom at position.
+Get the visible position of a element.
+Returns the position of the element c in document, ignoring any invisble elements.
+Returns -1 if position is not found, or the c is invisible internally.
 
 ### Doc#on('insert', op)
 

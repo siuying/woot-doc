@@ -6,6 +6,38 @@ test('Seq#position should return position', t => {
   const seq = new Seq()
   t.is(seq.position(Atom.begin), 0)
   t.is(seq.position(Atom.end), 1)
+
+  const c1 = new Atom([0, 1], 'h')
+  const c2 = new Atom([0, 2], 'e')
+  const c3 = new Atom([0, 3], 'l')
+  seq.insert(c1, 1)
+  seq.insert(c2, 2)
+  seq.insert(c3, 3)
+
+  t.is(seq.position(Atom.begin), 0)
+  t.is(seq.position(c1), 1)
+  t.is(seq.position(c2), 2)
+  t.is(seq.position(c3), 3)
+  t.is(seq.position(Atom.end), 4)
+})
+
+test('Seq#visiblePosition should return position of visible character', t => {
+  const seq = new Seq()
+  t.is(seq.position(Atom.begin), 0)
+  t.is(seq.position(Atom.end), 1)
+
+  const c1 = new Atom([0, 1], 'h', false)
+  const c2 = new Atom([0, 2], 'e', false)
+  const c3 = new Atom([0, 3], 'l')
+  seq.insert(c1, 1)
+  seq.insert(c2, 2)
+  seq.insert(c3, 3)
+
+  t.is(seq.visiblePosition(Atom.begin), 0)
+  t.is(seq.visiblePosition(c1), -1)
+  t.is(seq.visiblePosition(c2), -1)
+  t.is(seq.visiblePosition(c3), 1)
+  t.is(seq.visiblePosition(Atom.end), 2)
 })
 
 test('Seq#at should return elements', t => {

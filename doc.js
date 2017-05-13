@@ -17,9 +17,11 @@ function Doc (siteId, localClock = 0, sequence = new Seq(), pool = []) {
 }
 inherits(Doc, EventEmitter)
 
-// return visible atom at position
-Doc.prototype.visibleAtomAt = function (position) {
-  return this.sequence.visibleAtomAt(position)
+// Get the visible position of atom.
+// Returns the position of the element c in sequence, ignoring invisble elements.
+// Returns -1 if position is not found, or the c is invisible internally.
+Doc.prototype.visiblePosition = function (c) {
+  return this.sequence.visiblePosition(c)
 }
 
 // Generate insert operation to the document

@@ -34,11 +34,25 @@ Seq.prototype.at = function (position) {
 // Returns the position of the element c in sequence as a natural number.
 // Returns -1 if position is not found.
 Seq.prototype.position = function (c) {
+  return this.index[Atom.getIndexKeyById(c.id)]
+}
+
+// Returns the position of the element c in sequence as a natural number, ignoring invisble characters.
+// Returns -1 if position is not found.
+Seq.prototype.visiblePosition = function (c) {
+  let counter = 0
   for (let i = 0; i < this.storage.length; i++) {
-    const el = this.storage[i]
-    if (el.id[0] == c.id[0] && el.id[1] == c.id[1]) {
-      return i
-    }
+     const el = this.storage[i]
+      if (el.id[0] == c.id[0] && el.id[1] == c.id[1]) {
+        if (el.visible) {
+          return counter
+        } else {
+          return -1
+        }
+      }
+      if (el.visible) {
+        counter = counter + 1
+      }
   }
   return -1
 }
