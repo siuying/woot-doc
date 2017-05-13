@@ -27,9 +27,9 @@ Doc.prototype.visiblePosition = function (c) {
 // Generate insert operation to the document
 Doc.prototype.generateIns = function (position, value, attributes = {}) {
   this.localClock = this.localClock + 1
-  const prevChar = this.visibleAtomAt(position)
+  const prevChar = this.sequence.visibleAtomAt(position)
   const prevId = prevChar.id
-  const nextChar = this.visibleAtomAt(position + 1)
+  const nextChar = this.sequence.visibleAtomAt(position + 1)
   const nextId = nextChar.id
   const id = [this.siteId, this.localClock]
   const visible = true
@@ -67,7 +67,7 @@ Doc.prototype._integrateIns = function (char, prevChar, nextChar) {
 }
 
 Doc.prototype.generateDel = function (pos) {
-  const char = this.visibleAtomAt(pos)
+  const char = this.sequence.visibleAtomAt(pos)
   assert((char && char !== Atom.begin && char !== Atom.end), 'cannot generateDel when no more content to delete.')
 
   char.visible = false
@@ -85,7 +85,7 @@ Doc.prototype._integrateDel = function (char) {
 }
 
 Doc.prototype.generateAttrib = function (pos, attributes) {
-  const char = this.visibleAtomAt(pos)
+  const char = this.sequence.visibleAtomAt(pos)
   assert(char, 'char not exists')
 
   char.attributes = Object.assign(char.attributes, attributes)
