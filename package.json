@@ -6,7 +6,7 @@
     "type": "git",
     "url": "git://github.com/siuying/woot-doc.git"
   },
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
