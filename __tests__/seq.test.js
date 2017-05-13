@@ -34,8 +34,8 @@ test('Seq#visiblePosition should return position of visible character', t => {
   seq.insert(c3, 3)
 
   t.is(seq.visiblePosition(Atom.begin), 0)
-  t.is(seq.visiblePosition(c1), -1)
-  t.is(seq.visiblePosition(c2), -1)
+  t.is(seq.visiblePosition(c1), 1)
+  t.is(seq.visiblePosition(c2), 1)
   t.is(seq.visiblePosition(c3), 1)
   t.is(seq.visiblePosition(Atom.end), 2)
 })
