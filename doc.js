@@ -110,6 +110,20 @@ Doc.prototype._isExecutable = function (op) {
 }
 
 Doc.prototype.receive = function (op) {
+  if (op.attrib) {
+    if (!(op.attrib instanceof Atom)) {
+      op.attrib = new Atom(op.attrib)
+    }
+  } else if (op.delete) {
+    if (!(op.delete instanceof Atom)) {
+      op.delete = new Atom(op.delete)
+    }
+  } else if (op.insert) {
+    if (!(op.insert instanceof Atom)) {
+      op.insert = new Atom(op.insert)
+    }
+  }
+
   if (this._isExecutable(op)) {
     this.execute(op)
   } else {

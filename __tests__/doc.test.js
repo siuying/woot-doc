@@ -190,6 +190,37 @@ test("Doc#receive will execute executable op", t => {
   const insertOp = {insert: chD}
   doc.receive(insertOp)
   t.is(doc.sequence.toString(), 'adbc')
+
+  const attribOp = {attrib: chD, value: {bold: true}}
+  doc.receive(attribOp)
+  t.deepEqual(doc.sequence.visibleAtomAt(2).attributes, {bold: true})
+
+  const deleteOp = {delete: chD}
+  doc.receive(deleteOp)
+  t.is(doc.sequence.toString(), 'abc')
+})
+
+test("Doc#receive will execute executable op as JSON", t => {
+  const doc = new Doc(1999)
+  doc.generateIns(0, 'a')
+  doc.generateIns(1, 'b')
+  doc.generateIns(2, 'c')
+  t.is(doc.sequence.toString(), 'abc')
+
+  const chA = doc.sequence.visibleAtomAt(1)
+  const chB = doc.sequence.visibleAtomAt(2)
+  const chD = new Atom([100, 1], 'd', true, {}, chA.id, chB.id)
+  const insertOp = {insert: chD}
+  doc.receive(JSON.parse(JSON.stringify(insertOp)))
+  t.is(doc.sequence.toString(), 'adbc')
+
+  const attribOp = {attrib: chD, value: {bold: true}}
+  doc.receive(JSON.parse(JSON.stringify(attribOp)))
+  t.deepEqual(doc.sequence.visibleAtomAt(2).attributes, {bold: true})
+
+  const deleteOp = {delete: chD}
+  doc.receive(JSON.parse(JSON.stringify(deleteOp)))
+  t.is(doc.sequence.toString(), 'abc')
 })
 
 test("Doc#receive will push unexecutable op in pool and execute it later", t => {
