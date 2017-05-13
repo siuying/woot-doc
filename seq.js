@@ -6,8 +6,7 @@ const assert = require('assert')
 
 function Seq (data = [Atom.begin, Atom.end], index = null) {
   if (!(this instanceof Seq)) return new Seq(data, index)
-  this.storage = data
-  
+  this.storage = data 
   if (!this.index) {
     this.index = {}
     for (let i = 0; i < data.length; i++) {
