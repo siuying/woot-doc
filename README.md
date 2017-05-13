@@ -20,6 +20,10 @@ Generate an set attributes operation.
 
 Receive an operation. If the op is executable, execute it. Otherwise, push it into pool.
 
+### Doc#visibleAtomAt(pos)
+
+Return visible atom at position.
+
 ### Doc#on('insert', op)
 
 Emitted when an insert is generated locally.
@@ -36,13 +40,13 @@ Emitted when an attrib is generated locally.
 
 Emitted when an operation from remote is executed.
 
-### Doc#snapshot()
+### Doc#toJSON()
 
 Get an structure that can be persisted the current state of document as JSON.
 
-### Doc.fromSnapshot(snapshot)
+### Doc.fromJSON(json)
 
-Get a Document from snapshot.
+Get a Document from JSON.
 
 ## Operations
 
