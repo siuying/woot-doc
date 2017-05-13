@@ -32,6 +32,10 @@ Emitted when a delete is generated locally.
 
 Emitted when an attrib is generated locally.
 
+### Doc#on('execute', op)
+
+Emitted when an operation from remote is executed.
+
 ### Doc#snapshot()
 
 Get an structure that can be persisted the current state of document as JSON.

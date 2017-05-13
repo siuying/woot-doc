@@ -165,6 +165,8 @@ Doc.prototype.execute = function (op) {
   } else  {
     assert(false, `unexpected op: ${op}`)
   }
+
+  this.emit('execute', this, op)
 }
 
 Doc.prototype.toString = function () {
